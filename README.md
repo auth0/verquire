@@ -1,4 +1,4 @@
-verquire - versioned require
+Verquire: versioned require
 ===
 
 This module intercepts `require` to support a syntax which allows loading of a specific version of a Node.js module. 
@@ -28,7 +28,7 @@ var foo = require('foo@1.2.3');
 
 ## Setup and configuration
 
-The verquire module redirects requests for specific module versions to a dedicated directory structure. The directory is identified with `VERQUIRE_DIR` environment variable, or the `_verquire` subdirectory of the install location of the *verquire* module by default. The structure of this directory must follow this pattern:
+The *verquire* module redirects requests for specific module versions to a dedicated directory structure. The directory is identified with `VERQUIRE_DIR` environment variable, or the `_verquire` subdirectory of the install location of the *verquire* module by default. The structure of this directory must follow this pattern:
 
 ```
 <VERQUIRE_DIR>
@@ -59,7 +59,7 @@ npm i foo@1.0.0
 
 ## Analytics
 
-The *verquire* module can optionally track failed module load attempts using Google Measurement Protocol. If the `VERQUIRE_GA` environment variable is set, every failed module request will cause a measurement protocol to be sent to the specified GA property. The event category will be set to `FAILED_REQUIRE`, the event label to the name of the module that failed resolution (including version, if any), and the event action to the first 255 characters of the error message thrown by `require`. 
+The *verquire* module can optionally track failed module load attempts using Google Measurement Protocol. If the `VERQUIRE_GA` environment variable is set, every failed module request will cause a measurement protocol event to be sent to the specified GA property. The event category will be set to `FAILED_REQUIRE`, the event label to the name of the module that failed resolution (including version, if any), and the event action to the first 255 characters of the error message thrown by `require`. 
 
 ## Not supported
 
