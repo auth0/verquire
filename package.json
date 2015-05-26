@@ -1,0 +1,37 @@
+{
+  "name": "verquire",
+  "author": {
+    "name": "Tomasz Janczuk <tomasz@janczuk.org>",
+    "url": "http://tomasz.janczuk.org",
+    "twitter": "tjanczuk"
+  },
+  "version": "0.1.0-pre",
+  "description": "Versioned require",
+  "tags": [
+    "auth0",
+    "require",
+    "npm",
+    "semver"
+  ],
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "licenses": [
+    {
+      "type": "Apache",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "main": "./lib/verquire.js",
+  "devDependencies": {
+    "mocha": "~2.0.1"
+  },
+  "homepage": "http://github.com/auth0/verquire",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:auth0/verquire.git"
+  },
+  "bugs": {
+    "url": "http://github.com/auth0/verquire/issues"
+  }
+}
