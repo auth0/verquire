@@ -57,6 +57,17 @@ cd <VERQUIRE_DIR>/foo/1.0.0
 npm i foo@1.0.0
 ```
 
+## Listing available versions
+
+You can list available versions of a named module by calling: 
+
+```javascript
+var verquire = require('verquire');
+console.log(verquire.list('mongodb'));
+```
+
+The `list` function returns an array of strings indicating the available module versions, or an empty array if the module is not installed. 
+
 ## Analytics
 
 The *verquire* module can optionally track failed module load attempts using Google Measurement Protocol. If the `VERQUIRE_GA` environment variable is set, every failed module request will cause a measurement protocol event to be sent to the specified GA property. The event category will be set to `FAILED_REQUIRE`, the event label to the name of the module that failed resolution (including version, if any), and the event action to the first 255 characters of the error message thrown by `require`. 
