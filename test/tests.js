@@ -14,8 +14,8 @@ describe('require', function () {
         assert.equal(require('foo@1.0.0').version, '1.0.0');
     });
 
-    it('works for foo@2.0.0', function () {
-        assert.equal(require('foo@2.0.0').version, '2.0.0');
+    it('works for foo@2.0.0-alpha', function () {
+        assert.equal(require('foo@2.0.0-alpha').version, '2.0.0-alpha');
     });
 
     it('lists available versions of foo', function () {
@@ -23,7 +23,7 @@ describe('require', function () {
         assert.ok(Array.isArray(f));
         assert.equal(f.length, 2);
         assert.equal(f[0], '1.0.0');
-        assert.equal(f[1], '2.0.0');
+        assert.equal(f[1], '2.0.0-alpha');
     });
 
     it('lists no versions of bar', function () {
