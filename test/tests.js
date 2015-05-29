@@ -62,7 +62,4 @@ describe('require', function () {
         }
     });
 
-    it('waits for GA flush', function (done) {
-        setTimeout(done, 1000);
-    });
 });
