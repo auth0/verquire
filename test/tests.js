@@ -76,7 +76,7 @@ describe('resolve', function(){
             throw new Error('Unexpected success');
         }
         catch (e) {
-            assert.equal(e.message, 'Cannot find module \'foo\'');
+            assert.equal(e.message, 'Cannot find module \'bar\'');
         }
     });
 
