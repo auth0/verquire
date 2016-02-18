@@ -1,6 +1,6 @@
 var assert = require('assert');
-
-process.env.VERQUIRE_DIR = require('path').join(__dirname, '..', 'test_versions');
+var path = require('path');
+var test_versions_dir = process.env.VERQUIRE_DIR = path.join(__dirname, '..', 'test_versions');
 process.env.VERQUIRE_GA = 'UA-37952868-5';
 var verquire = require('../');
 var parse = require('../lib/path-parser');
@@ -42,6 +42,64 @@ describe('path-parser', function(){
     });
 });
 
+
+
+describe('resolve', function(){
+
+    it('works for foo@1.0.0', function(){
+      assert.equal(verquire.resolve('foo@1.0.0'), path.join(test_versions_dir, 'foo/1.0.0/node_modules/foo/index.js'));
+    });
+
+    it('fails for foo@3.0.0', function () {
+        try {
+            verquire.resolve('foo@3.0.0');
+            throw new Error('Unexpected success');
+        } catch (e) {
+            assert.equal(e.message, 'Cannot find module \'foo@3.0.0\'');
+        }
+    });
+
+
+    it('fails for foo', function () {
+        try {
+            verquire.resolve('foo');
+            throw new Error('Unexpected success');
+        } catch (e) {
+            assert.equal(e.message, 'Cannot find module \'foo\'');
+        }
+    });
+
+
+    it('fails for bar', function () {
+        try {
+            verquire.resolve('bar');
+            throw new Error('Unexpected success');
+        }
+        catch (e) {
+            assert.equal(e.message, 'Cannot find module \'foo\'');
+        }
+    });
+
+
+    it('works for foo@1.0.0/not_index', function(){
+      assert.equal(verquire.resolve('foo@1.0.0/not_index'), path.join(test_versions_dir, 'foo/1.0.0/node_modules/foo/not_index.js'));
+    });
+
+    it('works for foo@2.0.0-alpha', function(){
+      assert.equal(verquire.resolve('foo@2.0.0-alpha'), path.join(test_versions_dir, 'foo/2.0.0-alpha/node_modules/foo/index.js'));
+    });
+
+    it('works for @bazorg/lorem@1.0.0', function(){
+      assert.equal(verquire.resolve('@bazorg/lorem@1.0.0'), path.join(test_versions_dir, '@bazorg/lorem/1.0.0/node_modules/@bazorg/lorem/index.js'));
+    });
+
+    it('works for @bazorg/lorem@1.0.0/ipsum', function(){
+      assert.equal(verquire.resolve('@bazorg/lorem@1.0.0/ipsum'), path.join(test_versions_dir, '@bazorg/lorem/1.0.0/node_modules/@bazorg/lorem/ipsum.js'));
+    });
+});
+
+
+
 describe('require', function () {
 
     it('works for native modules', function () {
@@ -56,16 +114,16 @@ describe('require', function () {
         assert.equal(require('foo@2.0.0-alpha').version, '2.0.0-alpha');
     });
 
-    it('works for an arbitrary file', function(){
+    it('works for an foo@1.0.0/not_index', function(){
         assert.equal(require('foo@1.0.0/not_index').version, 'not_index');
     });
 
-    it('works for @scoped module', function(){
-        assert.equal(require('@barorg/lorem@1.0.0').version, 'not_index');
+    it('works for @bazorg/lorem@1.0.0', function(){
+        assert.equal(require('@bazorg/lorem@1.0.0').version, '@bazorg/lorem');
     });
 
-    it('works for an arbitrary file in @scoped module', function(){
-        assert.equal(require('@barorg/lorem@1.0.0/ipsum').version, 'ipsum');
+    it('works for @bazorg/lorem@1.0.0/ipsum', function(){
+        assert.equal(require('@bazorg/lorem@1.0.0/ipsum').version, 'ipsum');
     });
 
     it('lists available versions of foo', function () {
@@ -86,9 +144,8 @@ describe('require', function () {
         try {
             require('foo@3.0.0');
             throw new Error('Unexpected success');
-        }
-        catch (e) {
-            assert.ok(e.message.match(/Cannot find module foo/));
+        } catch (e) {
+            assert.equal(e.message, 'Cannot find module \'foo@3.0.0\'');
         }
     });
 
@@ -96,9 +153,8 @@ describe('require', function () {
         try {
             require('foo');
             throw new Error('Unexpected success');
-        }
-        catch (e) {
-            assert.ok(e.message.match(/Cannot find module/));
+        } catch (e) {
+            assert.equal(e.message, 'Cannot find module \'foo\'');
         }
     });
 
@@ -108,15 +164,8 @@ describe('require', function () {
             throw new Error('Unexpected success');
         }
         catch (e) {
-            assert.ok(e.message.match(/Cannot find module/));
+            assert.equal(e.message, 'Cannot find module \'bar\'');
         }
     });
 
-});
-
-
-describe('resolve', function(){
-    it("works for foo@1.0.0", function(){
-      assert.equal(verquire.resolve('foo@1.0.0'), '');
-    });
 });
