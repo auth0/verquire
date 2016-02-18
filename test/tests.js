@@ -3,6 +3,44 @@ var assert = require('assert');
 process.env.VERQUIRE_DIR = require('path').join(__dirname, '..', 'test_versions');
 process.env.VERQUIRE_GA = 'UA-37952868-5';
 var verquire = require('../');
+var parse = require('../lib/path-parser');
+
+describe('path-parser', function(){
+    it('works with simple modules', function(){
+        var loc = parse('foo');
+        assert.equal(loc.module, 'foo');
+        assert.equal(loc.version, undefined);
+        assert.equal(loc.path, undefined);
+    });
+
+    it('works with modules with subversion', function(){
+        var loc = parse('foo@2.0.0');
+        assert.equal(loc.module, 'foo');
+        assert.equal(loc.version, '2.0.0');
+        assert.equal(loc.path, undefined);
+    });
+
+    it('works with @scoped modules with subversion', function(){
+        var loc = parse('@org/foo@2.0.0');
+        assert.equal(loc.module, '@org/foo');
+        assert.equal(loc.version, '2.0.0');
+        assert.equal(loc.path, undefined);
+    });
+
+    it('works with native modules with subversion and long path', function(){
+        var loc = parse('foo@2.0.0/bar/baz');
+        assert.equal(loc.module, 'foo');
+        assert.equal(loc.version, '2.0.0');
+        assert.equal(loc.path, '/bar/baz');
+    });
+
+    it('works with @scoped modules with subversion and long path', function(){
+        var loc = parse('@org/foo@2.0.0/bar/baz');
+        assert.equal(loc.module, '@org/foo');
+        assert.equal(loc.version, '2.0.0');
+        assert.equal(loc.path, '/bar/baz');
+    });
+});
 
 describe('require', function () {
 
@@ -16,6 +54,18 @@ describe('require', function () {
 
     it('works for foo@2.0.0-alpha', function () {
         assert.equal(require('foo@2.0.0-alpha').version, '2.0.0-alpha');
+    });
+
+    it('works for an arbitrary file', function(){
+        assert.equal(require('foo@1.0.0/not_index').version, 'not_index');
+    });
+
+    it('works for @scoped module', function(){
+        assert.equal(require('@barorg/lorem@1.0.0').version, 'not_index');
+    });
+
+    it('works for an arbitrary file in @scoped module', function(){
+        assert.equal(require('@barorg/lorem@1.0.0/ipsum').version, 'ipsum');
     });
 
     it('lists available versions of foo', function () {
@@ -62,4 +112,11 @@ describe('require', function () {
         }
     });
 
+});
+
+
+describe('resolve', function(){
+    it("works for foo@1.0.0", function(){
+      assert.equal(verquire.resolve('foo@1.0.0'), '');
+    });
 });
