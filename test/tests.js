@@ -6,35 +6,35 @@ var verquire = require('../');
 var parse = require('../lib/path-parser');
 
 describe('path-parser', function(){
-    it('works with simple modules', function(){
+    it('works with foo', function(){
         var loc = parse('foo');
         assert.equal(loc.module, 'foo');
         assert.equal(loc.version, undefined);
         assert.equal(loc.path, undefined);
     });
 
-    it('works with modules with subversion', function(){
+    it('works with foo@2.0.0', function(){
         var loc = parse('foo@2.0.0');
         assert.equal(loc.module, 'foo');
         assert.equal(loc.version, '2.0.0');
         assert.equal(loc.path, undefined);
     });
 
-    it('works with @scoped modules with subversion', function(){
+    it('works with @org/foo@2.0.0', function(){
         var loc = parse('@org/foo@2.0.0');
         assert.equal(loc.module, '@org/foo');
         assert.equal(loc.version, '2.0.0');
         assert.equal(loc.path, undefined);
     });
 
-    it('works with native modules with subversion and long path', function(){
+    it('works with foo@2.0.0/bar/baz', function(){
         var loc = parse('foo@2.0.0/bar/baz');
         assert.equal(loc.module, 'foo');
         assert.equal(loc.version, '2.0.0');
         assert.equal(loc.path, '/bar/baz');
     });
 
-    it('works with @scoped modules with subversion and long path', function(){
+    it('works with @org/foo@2.0.0/bar/baz', function(){
         var loc = parse('@org/foo@2.0.0/bar/baz');
         assert.equal(loc.module, '@org/foo');
         assert.equal(loc.version, '2.0.0');
@@ -89,6 +89,10 @@ describe('resolve', function(){
       assert.equal(verquire.resolve('foo@2.0.0-alpha'), path.join(test_versions_dir, 'foo/2.0.0-alpha/node_modules/foo/index.js'));
     });
 
+    it('works for foo@2.0.0-alpha/not_index', function(){
+      assert.equal(verquire.resolve('foo@2.0.0-alpha/not_index'), path.join(test_versions_dir, 'foo/2.0.0-alpha/node_modules/foo/not_index.js'));
+    });
+
     it('works for @bazorg/lorem@1.0.0', function(){
       assert.equal(verquire.resolve('@bazorg/lorem@1.0.0'), path.join(test_versions_dir, '@bazorg/lorem/1.0.0/node_modules/@bazorg/lorem/index.js'));
     });
@@ -116,6 +120,10 @@ describe('require', function () {
 
     it('works for an foo@1.0.0/not_index', function(){
         assert.equal(require('foo@1.0.0/not_index').version, 'not_index');
+    });
+
+    it('works for foo@2.0.0-alpha/not_index', function () {
+        assert.equal(require('foo@2.0.0-alpha/not_index').version, 'not_index-alpha');
     });
 
     it('works for @bazorg/lorem@1.0.0', function(){
