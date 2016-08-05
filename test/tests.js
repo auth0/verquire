@@ -14,6 +14,10 @@ describe('require', function () {
         assert.equal(require('foo@1.0.0').version, '1.0.0');
     });
 
+    it('works for @baz/bar@1.0.3', function () {
+        assert.equal(require('@baz/bar@1.0.3').version, '1.0.3');
+    });
+
     it('works for foo@2.0.0-alpha', function () {
         assert.equal(require('foo@2.0.0-alpha').version, '2.0.0-alpha');
     });
